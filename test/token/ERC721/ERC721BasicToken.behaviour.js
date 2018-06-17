@@ -3,7 +3,7 @@ import assertRevert from '../../helpers/assertRevert';
 import decodeLogs from '../../helpers/decodeLogs';
 import expectEvent from '../../helpers/expectEvent';
 import _ from 'lodash';
-import { promisify } from 'es6-promisify';
+// import { promisify } from 'es6-promisify';
 
 const ERC721Receiver = artifacts.require('ERC721ReceiverMock.sol');
 const BigNumber = web3.BigNumber;
