@@ -1,8 +1,10 @@
 
 import assertRevert from '../helpers/assertRevert';
 import { getBouncerSigner } from '../helpers/sign';
+import makeInterfaceId from '../helpers/makeInterfaceId';
 
-const SignatureBouncer = artifacts.require('SignatureBouncerMock');
+const Bouncer = artifacts.require('BouncerMock');
+const BouncerDelegateImpl = artifacts.require('BouncerDelegateImpl');
 
 require('chai')
   .use(require('chai-as-promised'))
@@ -12,12 +14,12 @@ const UINT_VALUE = 23;
 const BYTES_VALUE = web3.toHex('test');
 const INVALID_SIGNATURE = '0xabcd';
 
-contract('Bouncer', ([_, owner, authorizedUser, anyone, bouncerAddress, newBouncer]) => {
+contract('Bouncer', ([_, owner, authorizedUser, anyone, delegate, newDelegate]) => {
   before(async function () {
-    this.bouncer = await SignatureBouncer.new({ from: owner });
-    this.roleBouncer = await this.bouncer.ROLE_BOUNCER();
+    this.bouncer = await Bouncer.new({ from: owner });
+    this.roleDelegate = await this.bouncer.ROLE_DELEGATE();
     this.roleOwner = await this.bouncer.ROLE_OWNER();
-    this.signFor = getBouncerSigner(this.bouncer, bouncerAddress);
+    this.signFor = getBouncerSigner(this.bouncer, delegate);
   });
 
   it('should have a default owner', async function () {
@@ -25,15 +27,15 @@ contract('Bouncer', ([_, owner, authorizedUser, anyone, bouncerAddress, newBounc
     hasRole.should.eq(true);
   });
 
-  it('should allow owner to add a bouncer', async function () {
-    await this.bouncer.addBouncer(bouncerAddress, { from: owner });
-    const hasRole = await this.bouncer.hasRole(bouncerAddress, this.roleBouncer);
+  it('should allow owner to add a delegate', async function () {
+    await this.bouncer.addDelegate(delegate, { from: owner });
+    const hasRole = await this.bouncer.hasRole(delegate, this.roleDelegate);
     hasRole.should.eq(true);
   });
 
-  it('should not allow anyone to add a bouncer', async function () {
+  it('should not allow anyone to add a delegate', async function () {
     await assertRevert(
-      this.bouncer.addBouncer(bouncerAddress, { from: anyone })
+      this.bouncer.addDelegate(delegate, { from: anyone })
     );
   });
 
@@ -164,32 +166,77 @@ contract('Bouncer', ([_, owner, authorizedUser, anyone, bouncerAddress, newBounc
   });
 
   context('management', () => {
-    it('should not allow anyone to add bouncers', async function () {
+    it('should not allow anyone to add delegates', async function () {
       await assertRevert(
-        this.bouncer.addBouncer(newBouncer, { from: anyone })
+        this.bouncer.addDelegate(newDelegate, { from: anyone })
       );
     });
 
-    it('should be able to add bouncers', async function () {
-      await this.bouncer.addBouncer(newBouncer, { from: owner })
+    it('should be able to add delegate', async function () {
+      await this.bouncer.addDelegate(newDelegate, { from: owner })
         .should.be.fulfilled;
     });
 
     it('should not allow adding invalid address', async function () {
       await assertRevert(
-        this.bouncer.addBouncer('0x0', { from: owner })
+        this.bouncer.addDelegate('0x0', { from: owner })
       );
     });
 
-    it('should not allow anyone to remove bouncer', async function () {
+    it('should not allow anyone to remove delegate', async function () {
       await assertRevert(
-        this.bouncer.removeBouncer(newBouncer, { from: anyone })
+        this.bouncer.removeDelegate(newDelegate, { from: anyone })
       );
     });
 
-    it('should be able to remove bouncers', async function () {
-      await this.bouncer.removeBouncer(newBouncer, { from: owner })
+    it('should be able to remove delegates', async function () {
+      await this.bouncer.removeDelegate(newDelegate, { from: owner })
         .should.be.fulfilled;
+    });
+  });
+
+  context('contract delegate', () => {
+    context('not a delegate', () => {
+      beforeEach(async function () {
+        this.delegateContract = await BouncerDelegateImpl.new(true, this.bouncer.address, { from: owner });
+      });
+
+      it('should fail', async function () {
+        await assertRevert(
+          this.delegateContract.forward({ from: anyone })
+        );
+      });
+    });
+
+    context('invalid delegate', () => {
+      beforeEach(async function () {
+        this.delegateContract = await BouncerDelegateImpl.new(false, this.bouncer.address, { from: owner });
+        await this.bouncer.addDelegate(this.delegateContract.address, { from: owner });
+      });
+
+      it('should be invalid', async function () {
+        await assertRevert(
+          this.delegateContract.forward({ from: anyone })
+        );
+      });
+    });
+
+    context('valid delegate', () => {
+      beforeEach(async function () {
+        this.delegateContract = await BouncerDelegateImpl.new(true, this.bouncer.address, { from: owner });
+        await this.bouncer.addDelegate(this.delegateContract.address, { from: owner });
+      });
+
+      it('should support isValidSignature', async function () {
+        const supported = await this.delegateContract.supportsInterface(makeInterfaceId([
+          'isValidSignature(bytes32,bytes)',
+        ]));
+        supported.should.eq(true);
+      });
+
+      it('should be valid', async function () {
+        await this.delegateContract.forward({ from: anyone });
+      });
     });
   });
 });

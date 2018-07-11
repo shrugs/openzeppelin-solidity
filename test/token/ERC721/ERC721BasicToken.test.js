@@ -2,7 +2,7 @@ import shouldBehaveLikeERC721BasicToken from './ERC721BasicToken.behaviour';
 import shouldMintAndBurnERC721Token from './ERC721MintBurn.behaviour';
 
 const BigNumber = web3.BigNumber;
-const ERC721BasicToken = artifacts.require('ERC721BasicTokenMock.sol');
+const ERC721BasicToken = artifacts.require('ERC721BasicTokenMock');
 
 require('chai')
   .use(require('chai-as-promised'))
