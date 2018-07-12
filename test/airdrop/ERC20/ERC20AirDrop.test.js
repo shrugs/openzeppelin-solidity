@@ -8,7 +8,7 @@ require('chai')
   .use(require('chai-bignumber')(web3.BigNumber))
   .should();
 
-contract('ERC20Airdropper', function ([_, owner, delegate, anyone]) {
+contract('ERC20Airdrop', function ([_, owner, delegate, anyone]) {
   beforeEach(async function () {
     this.token = await MintableToken.new({ from: owner });
     console.log(web3.eth.estimateGas({

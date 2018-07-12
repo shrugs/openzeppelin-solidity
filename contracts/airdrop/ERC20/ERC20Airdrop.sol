@@ -4,7 +4,7 @@ import "../../access/Bouncer.sol";
 import "../../token/ERC20/MintableToken.sol";
 
 
-contract ERC20Airdropper is Bouncer {
+contract ERC20Airdrop is Bouncer {
 
   MintableToken public token ;
 
