@@ -1,0 +1,27 @@
+{
+  "contractName": "ForceEther",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_recipient",
+          "type": "address"
+        }
+      ],
+      "name": "destroyAndSend",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "constructor"
+    }
+  ],
+  "bytecode": "608060405260c9806100126000396000f300608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063f5074f41146044575b600080fd5b348015604f57600080fd5b506082600480360381019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506084565b005b8073ffffffffffffffffffffffffffffffffffffffff16ff00a165627a7a7230582027f65d9ed5b18152f6c26c13d4ecd1721b47aacba26a993127ddcf29a2f4cd990029",
+  "linkReferences": {}
+}

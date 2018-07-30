@@ -1,4 +1,3 @@
-const { ethGetBalance, ethSendTransaction } = require('./helpers/web3');
 const expectEvent = require('./helpers/expectEvent');
 const { assertRevert } = require('./helpers/assertRevert');
 
@@ -9,7 +8,7 @@ require('chai')
   .use(require('chai-bignumber')(web3.BigNumber))
   .should();
 
-const sendReward = async (from, to, value) => ethSendTransaction({
+const sendReward = async (from, to, value) => pweb3.eth.sendTransaction({
   from,
   to,
   value,
@@ -26,7 +25,7 @@ contract('Bounty', function ([_, owner, researcher]) {
     it('can set reward', async function () {
       await sendReward(owner, this.bounty.address, reward);
 
-      const balance = await ethGetBalance(this.bounty.address);
+      const balance = await pweb3.eth.getBalance(this.bounty.address);
       balance.should.be.bignumber.eq(reward);
     });
 
@@ -39,7 +38,7 @@ contract('Bounty', function ([_, owner, researcher]) {
 
         await sendReward(owner, this.bounty.address, reward);
 
-        const balance = await ethGetBalance(this.bounty.address);
+        const balance = await pweb3.eth.getBalance(this.bounty.address);
         balance.should.be.bignumber.eq(reward);
       });
 
@@ -68,17 +67,17 @@ contract('Bounty', function ([_, owner, researcher]) {
 
       claim.should.eq(true);
 
-      const researcherPrevBalance = await ethGetBalance(researcher);
+      const researcherPrevBalance = await pweb3.eth.getBalance(researcher);
 
       const gas = await this.bounty.withdrawPayments.estimateGas({ from: researcher });
       const gasPrice = web3.toWei(1, 'gwei');
       const gasCost = (new web3.BigNumber(gas)).times(gasPrice);
 
       await this.bounty.withdrawPayments({ from: researcher, gasPrice: gasPrice });
-      const updatedBalance = await ethGetBalance(this.bounty.address);
+      const updatedBalance = await pweb3.eth.getBalance(this.bounty.address);
       updatedBalance.should.be.bignumber.eq(0);
 
-      const researcherCurrBalance = await ethGetBalance(researcher);
+      const researcherCurrBalance = await pweb3.eth.getBalance(researcher);
       researcherCurrBalance.sub(researcherPrevBalance).should.be.bignumber.eq(reward.sub(gasCost));
     });
 

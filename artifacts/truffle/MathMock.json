@@ -1,0 +1,107 @@
+{
+  "contractName": "MathMock",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "a",
+          "type": "uint256"
+        },
+        {
+          "name": "b",
+          "type": "uint256"
+        }
+      ],
+      "name": "max256",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "a",
+          "type": "uint64"
+        },
+        {
+          "name": "b",
+          "type": "uint64"
+        }
+      ],
+      "name": "min64",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "a",
+          "type": "uint64"
+        },
+        {
+          "name": "b",
+          "type": "uint64"
+        }
+      ],
+      "name": "max64",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "result256",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "result64",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "a",
+          "type": "uint256"
+        },
+        {
+          "name": "b",
+          "type": "uint256"
+        }
+      ],
+      "name": "min256",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "608060405234801561001057600080fd5b50610356806100206000396000f300608060405260043610610078576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630c255c941461007d57806336b1315c146100b45780633a4faf7f146100ff5780634b820d1d1461014a57806378f23d4614610175578063b1e9292f146101b4575b600080fd5b34801561008957600080fd5b506100b260048036038101908080359060200190929190803590602001909291905050506101eb565b005b3480156100c057600080fd5b506100fd600480360381019080803567ffffffffffffffff169060200190929190803567ffffffffffffffff1690602001909291905050506101ff565b005b34801561010b57600080fd5b50610148600480360381019080803567ffffffffffffffff169060200190929190803567ffffffffffffffff169060200190929190505050610234565b005b34801561015657600080fd5b5061015f610269565b6040518082815260200191505060405180910390f35b34801561018157600080fd5b5061018a61026f565b604051808267ffffffffffffffff1667ffffffffffffffff16815260200191505060405180910390f35b3480156101c057600080fd5b506101e96004803603810190808035906020019092919080359060200190929190505050610288565b005b6101f5828261029c565b6001819055505050565b61020982826102b6565b6000806101000a81548167ffffffffffffffff021916908367ffffffffffffffff1602179055505050565b61023e82826102e3565b6000806101000a81548167ffffffffffffffff021916908367ffffffffffffffff1602179055505050565b60015481565b6000809054906101000a900467ffffffffffffffff1681565b6102928282610311565b6001819055505050565b6000818310156102ac57816102ae565b825b905092915050565b60008167ffffffffffffffff168367ffffffffffffffff16106102d957816102db565b825b905092915050565b60008167ffffffffffffffff168367ffffffffffffffff1610156103075781610309565b825b905092915050565b60008183106103205781610322565b825b9050929150505600a165627a7a723058209d0b7dec1ac202c76c8b64455cb0f9a76d54b35c1d73f0e636750c3c6cc80b460029",
+  "linkReferences": {}
+}

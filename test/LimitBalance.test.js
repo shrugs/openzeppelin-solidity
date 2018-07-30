@@ -1,5 +1,4 @@
 const { assertRevert } = require('./helpers/assertRevert');
-const { ethGetBalance } = require('./helpers/web3');
 
 const LimitBalanceMock = artifacts.require('LimitBalanceMock');
 
@@ -21,7 +20,7 @@ contract('LimitBalance', function (accounts) {
     const amount = 1;
     await limitBalance.limitedDeposit({ value: amount });
 
-    const balance = await ethGetBalance(limitBalance.address);
+    const balance = await pweb3.eth.getBalance(limitBalance.address);
     assert.equal(balance, amount);
   });
 
@@ -34,11 +33,11 @@ contract('LimitBalance', function (accounts) {
     const amount = 500;
     await limitBalance.limitedDeposit({ value: amount });
 
-    const balance = await ethGetBalance(limitBalance.address);
+    const balance = await pweb3.eth.getBalance(limitBalance.address);
     assert.equal(balance, amount);
 
     await limitBalance.limitedDeposit({ value: amount });
-    const updatedBalance = await ethGetBalance(limitBalance.address);
+    const updatedBalance = await pweb3.eth.getBalance(limitBalance.address);
     assert.equal(updatedBalance, amount * 2);
   });
 
@@ -46,7 +45,7 @@ contract('LimitBalance', function (accounts) {
     const amount = 500;
     await limitBalance.limitedDeposit({ value: amount });
 
-    const balance = await ethGetBalance(limitBalance.address);
+    const balance = await pweb3.eth.getBalance(limitBalance.address);
     assert.equal(balance, amount);
     await assertRevert(limitBalance.limitedDeposit({ value: amount + 1 }));
   });

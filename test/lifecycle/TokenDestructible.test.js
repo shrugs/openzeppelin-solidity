@@ -1,5 +1,3 @@
-const { ethGetBalance } = require('../helpers/web3');
-
 const TokenDestructible = artifacts.require('TokenDestructible');
 const StandardTokenMock = artifacts.require('StandardTokenMock');
 
@@ -17,10 +15,10 @@ contract('TokenDestructible', function (accounts) {
   });
 
   it('should send balance to owner after destruction', async function () {
-    const initBalance = await ethGetBalance(owner);
+    const initBalance = await pweb3.eth.getBalance(owner);
     await tokenDestructible.destroy([], { from: owner });
 
-    const newBalance = await ethGetBalance(owner);
+    const newBalance = await pweb3.eth.getBalance(owner);
     assert.isTrue(newBalance > initBalance);
   });
 

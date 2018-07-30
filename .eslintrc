@@ -16,7 +16,8 @@
     "artifacts": false,
     "contract": false,
     "assert": false,
-    "web3": false
+    "web3": false,
+    "pweb3": false
   },
   "rules": {
 

@@ -1,5 +1,4 @@
 const DestructibleMock = artifacts.require('DestructibleMock');
-const { ethGetBalance } = require('../helpers/web3');
 
 contract('Destructible', function (accounts) {
   beforeEach(async function () {
@@ -14,16 +13,16 @@ contract('Destructible', function (accounts) {
   });
 
   it('should send balance to owner after destruction', async function () {
-    const initBalance = await ethGetBalance(this.owner);
+    const initBalance = await pweb3.eth.getBalance(this.owner);
     await this.destructible.destroy({ from: this.owner });
-    const newBalance = await ethGetBalance(this.owner);
+    const newBalance = await pweb3.eth.getBalance(this.owner);
     assert.isTrue(newBalance > initBalance);
   });
 
   it('should send balance to recepient after destruction', async function () {
-    const initBalance = await ethGetBalance(accounts[1]);
+    const initBalance = await pweb3.eth.getBalance(accounts[1]);
     await this.destructible.destroyAndSend(accounts[1], { from: this.owner });
-    const newBalance = await ethGetBalance(accounts[1]);
+    const newBalance = await pweb3.eth.getBalance(accounts[1]);
     assert.isTrue(newBalance.greaterThan(initBalance));
   });
 });

@@ -63,7 +63,7 @@ contract('Bouncer', ([_, owner, anyone, bouncerAddress, authorizedUser]) => {
     describe('modifiers', () => {
       context('plain signature', () => {
         it('allows valid signature for sender', async function () {
-          await this.bouncer.onlyWithValidSignature(this.signFor(authorizedUser), { from: authorizedUser });
+          await this.bouncer.onlyWithValidSignature(await this.signFor(authorizedUser), { from: authorizedUser });
         });
 
         it('does not allow invalid signature for sender', async function () {
@@ -74,13 +74,13 @@ contract('Bouncer', ([_, owner, anyone, bouncerAddress, authorizedUser]) => {
 
         it('does not allow valid signature for other sender', async function () {
           await assertRevert(
-            this.bouncer.onlyWithValidSignature(this.signFor(authorizedUser), { from: anyone })
+            this.bouncer.onlyWithValidSignature(await this.signFor(authorizedUser), { from: anyone })
           );
         });
 
         it('does not allow valid signature for method for sender', async function () {
           await assertRevert(
-            this.bouncer.onlyWithValidSignature(this.signFor(authorizedUser, 'onlyWithValidSignature'),
+            this.bouncer.onlyWithValidSignature(await this.signFor(authorizedUser, 'onlyWithValidSignature'),
               { from: authorizedUser })
           );
         });
@@ -89,7 +89,7 @@ contract('Bouncer', ([_, owner, anyone, bouncerAddress, authorizedUser]) => {
       context('method signature', () => {
         it('allows valid signature with correct method for sender', async function () {
           await this.bouncer.onlyWithValidSignatureAndMethod(
-            this.signFor(authorizedUser, 'onlyWithValidSignatureAndMethod'), { from: authorizedUser }
+            await this.signFor(authorizedUser, 'onlyWithValidSignatureAndMethod'), { from: authorizedUser }
           );
         });
 
@@ -102,21 +102,21 @@ contract('Bouncer', ([_, owner, anyone, bouncerAddress, authorizedUser]) => {
         it('does not allow valid signature with correct method for other sender', async function () {
           await assertRevert(
             this.bouncer.onlyWithValidSignatureAndMethod(
-              this.signFor(authorizedUser, 'onlyWithValidSignatureAndMethod'), { from: anyone }
+              await this.signFor(authorizedUser, 'onlyWithValidSignatureAndMethod'), { from: anyone }
             )
           );
         });
 
         it('does not allow valid method signature with incorrect method for sender', async function () {
           await assertRevert(
-            this.bouncer.onlyWithValidSignatureAndMethod(this.signFor(authorizedUser, 'theWrongMethod'),
+            this.bouncer.onlyWithValidSignatureAndMethod(await this.signFor(authorizedUser, 'theWrongMethod'),
               { from: authorizedUser })
           );
         });
 
         it('does not allow valid non-method signature method for sender', async function () {
           await assertRevert(
-            this.bouncer.onlyWithValidSignatureAndMethod(this.signFor(authorizedUser), { from: authorizedUser })
+            this.bouncer.onlyWithValidSignatureAndMethod(await this.signFor(authorizedUser), { from: authorizedUser })
           );
         });
       });
@@ -124,7 +124,7 @@ contract('Bouncer', ([_, owner, anyone, bouncerAddress, authorizedUser]) => {
       context('method and data signature', () => {
         it('allows valid signature with correct method and data for sender', async function () {
           await this.bouncer.onlyWithValidSignatureAndData(UINT_VALUE,
-            this.signFor(authorizedUser, 'onlyWithValidSignatureAndData', [UINT_VALUE]), { from: authorizedUser }
+            await this.signFor(authorizedUser, 'onlyWithValidSignatureAndData', [UINT_VALUE]), { from: authorizedUser }
           );
         });
 
@@ -137,7 +137,7 @@ contract('Bouncer', ([_, owner, anyone, bouncerAddress, authorizedUser]) => {
         it('does not allow valid signature with correct method and incorrect data for sender', async function () {
           await assertRevert(
             this.bouncer.onlyWithValidSignatureAndData(UINT_VALUE + 10,
-              this.signFor(authorizedUser, 'onlyWithValidSignatureAndData', [UINT_VALUE]),
+              await this.signFor(authorizedUser, 'onlyWithValidSignatureAndData', [UINT_VALUE]),
               { from: authorizedUser }
             )
           );
@@ -146,7 +146,7 @@ contract('Bouncer', ([_, owner, anyone, bouncerAddress, authorizedUser]) => {
         it('does not allow valid signature with correct method and data for other sender', async function () {
           await assertRevert(
             this.bouncer.onlyWithValidSignatureAndData(UINT_VALUE,
-              this.signFor(authorizedUser, 'onlyWithValidSignatureAndData', [UINT_VALUE]),
+              await this.signFor(authorizedUser, 'onlyWithValidSignatureAndData', [UINT_VALUE]),
               { from: anyone }
             )
           );
@@ -155,7 +155,7 @@ contract('Bouncer', ([_, owner, anyone, bouncerAddress, authorizedUser]) => {
         it('does not allow valid non-method signature for sender', async function () {
           await assertRevert(
             this.bouncer.onlyWithValidSignatureAndData(UINT_VALUE,
-              this.signFor(authorizedUser), { from: authorizedUser }
+              await this.signFor(authorizedUser), { from: authorizedUser }
             )
           );
         });
@@ -165,7 +165,7 @@ contract('Bouncer', ([_, owner, anyone, bouncerAddress, authorizedUser]) => {
     context('signature validation', () => {
       context('plain signature', () => {
         it('validates valid signature for valid user', async function () {
-          (await this.bouncer.checkValidSignature(authorizedUser, this.signFor(authorizedUser))).should.eq(true);
+          (await this.bouncer.checkValidSignature(authorizedUser, await this.signFor(authorizedUser))).should.eq(true);
         });
 
         it('does not validate invalid signature for valid user', async function () {
@@ -173,11 +173,11 @@ contract('Bouncer', ([_, owner, anyone, bouncerAddress, authorizedUser]) => {
         });
 
         it('does not validate valid signature for anyone', async function () {
-          (await this.bouncer.checkValidSignature(anyone, this.signFor(authorizedUser))).should.eq(false);
+          (await this.bouncer.checkValidSignature(anyone, await this.signFor(authorizedUser))).should.eq(false);
         });
 
         it('does not validate valid signature for method for valid user', async function () {
-          (await this.bouncer.checkValidSignature(authorizedUser, this.signFor(authorizedUser, 'checkValidSignature'))
+          (await this.bouncer.checkValidSignature(authorizedUser, await this.signFor(authorizedUser, 'checkValidSignature'))
           ).should.eq(false);
         });
       });
@@ -185,7 +185,7 @@ contract('Bouncer', ([_, owner, anyone, bouncerAddress, authorizedUser]) => {
       context('method signature', () => {
         it('validates valid signature with correct method for valid user', async function () {
           (await this.bouncer.checkValidSignatureAndMethod(authorizedUser,
-            this.signFor(authorizedUser, 'checkValidSignatureAndMethod'))
+            await this.signFor(authorizedUser, 'checkValidSignatureAndMethod'))
           ).should.eq(true);
         });
 
@@ -195,12 +195,12 @@ contract('Bouncer', ([_, owner, anyone, bouncerAddress, authorizedUser]) => {
 
         it('does not validate valid signature with correct method for anyone', async function () {
           (await this.bouncer.checkValidSignatureAndMethod(anyone,
-            this.signFor(authorizedUser, 'checkValidSignatureAndMethod'))
+            await this.signFor(authorizedUser, 'checkValidSignatureAndMethod'))
           ).should.eq(false);
         });
 
         it('does not validate valid non-method signature with correct method for valid user', async function () {
-          (await this.bouncer.checkValidSignatureAndMethod(authorizedUser, this.signFor(authorizedUser))
+          (await this.bouncer.checkValidSignatureAndMethod(authorizedUser, await this.signFor(authorizedUser))
           ).should.eq(false);
         });
       });
@@ -208,7 +208,7 @@ contract('Bouncer', ([_, owner, anyone, bouncerAddress, authorizedUser]) => {
       context('method and data signature', () => {
         it('validates valid signature with correct method and data for valid user', async function () {
           (await this.bouncer.checkValidSignatureAndData(authorizedUser, BYTES_VALUE, UINT_VALUE,
-            this.signFor(authorizedUser, 'checkValidSignatureAndData', [authorizedUser, BYTES_VALUE, UINT_VALUE]))
+            await this.signFor(authorizedUser, 'checkValidSignatureAndData', [authorizedUser, BYTES_VALUE, UINT_VALUE]))
           ).should.eq(true);
         });
 
@@ -220,21 +220,21 @@ contract('Bouncer', ([_, owner, anyone, bouncerAddress, authorizedUser]) => {
         it('does not validate valid signature with correct method and incorrect data for valid user',
           async function () {
             (await this.bouncer.checkValidSignatureAndData(authorizedUser, BYTES_VALUE, UINT_VALUE + 10,
-              this.signFor(authorizedUser, 'checkValidSignatureAndData', [authorizedUser, BYTES_VALUE, UINT_VALUE]))
+              await this.signFor(authorizedUser, 'checkValidSignatureAndData', [authorizedUser, BYTES_VALUE, UINT_VALUE]))
             ).should.eq(false);
           }
         );
 
         it('does not validate valid signature with correct method and data for anyone', async function () {
           (await this.bouncer.checkValidSignatureAndData(anyone, BYTES_VALUE, UINT_VALUE,
-            this.signFor(authorizedUser, 'checkValidSignatureAndData', [authorizedUser, BYTES_VALUE, UINT_VALUE]))
+            await this.signFor(authorizedUser, 'checkValidSignatureAndData', [authorizedUser, BYTES_VALUE, UINT_VALUE]))
           ).should.eq(false);
         });
 
         it('does not validate valid non-method-data signature with correct method and data for valid user',
           async function () {
             (await this.bouncer.checkValidSignatureAndData(authorizedUser, BYTES_VALUE, UINT_VALUE,
-              this.signFor(authorizedUser, 'checkValidSignatureAndData'))
+              await this.signFor(authorizedUser, 'checkValidSignatureAndData'))
             ).should.eq(false);
           }
         );

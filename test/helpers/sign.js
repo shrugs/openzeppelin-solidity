@@ -19,8 +19,8 @@ function hashMessage (message) {
 
 // signs message in node (auto-applies prefix)
 // message must be in hex already! will not be autoconverted!
-const signMessage = (signer, message = '') => {
-  return web3.eth.sign(signer, message);
+const signMessage = async (signer, message = '') => {
+  return pweb3.eth.sign(signer, message);
 };
 
 // @TODO - remove this when we migrate to web3-1.0.0
@@ -44,7 +44,7 @@ const transformToFullName = function (json) {
  * @param methodName string
  * @param methodArgs any[]
  */
-const getBouncerSigner = (contract, signer) => (redeemer, methodName, methodArgs = []) => {
+const getBouncerSigner = (contract, signer) => async (redeemer, methodName, methodArgs = []) => {
   const parts = [
     contract.address,
     redeemer,

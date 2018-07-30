@@ -37,6 +37,7 @@
   },
   "homepage": "https://github.com/OpenZeppelin/zeppelin-solidity",
   "devDependencies": {
+    "buidler": "^0.1.4",
     "chai": "^4.1.2",
     "chai-bignumber": "^2.0.2",
     "coveralls": "^3.0.1",

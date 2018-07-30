@@ -1,5 +1,4 @@
 const { expectThrow } = require('../helpers/expectThrow');
-const { ethSendTransaction, ethGetBalance } = require('../helpers/web3');
 
 const HasNoEtherTest = artifacts.require('HasNoEtherTest');
 const ForceEther = artifacts.require('ForceEther');
@@ -19,7 +18,7 @@ contract('HasNoEther', function (accounts) {
     const hasNoEther = await HasNoEtherTest.new();
 
     await expectThrow(
-      ethSendTransaction({
+      pweb3.eth.sendTransaction({
         from: accounts[1],
         to: hasNoEther.address,
         value: amount,
@@ -30,20 +29,20 @@ contract('HasNoEther', function (accounts) {
   it('should allow owner to reclaim ether', async function () {
     // Create contract
     const hasNoEther = await HasNoEtherTest.new();
-    const startBalance = await ethGetBalance(hasNoEther.address);
+    const startBalance = await pweb3.eth.getBalance(hasNoEther.address);
     assert.equal(startBalance, 0);
 
     // Force ether into it
     const forceEther = await ForceEther.new({ value: amount });
     await forceEther.destroyAndSend(hasNoEther.address);
-    const forcedBalance = await ethGetBalance(hasNoEther.address);
+    const forcedBalance = await pweb3.eth.getBalance(hasNoEther.address);
     assert.equal(forcedBalance, amount);
 
     // Reclaim
-    const ownerStartBalance = await ethGetBalance(accounts[0]);
+    const ownerStartBalance = await pweb3.eth.getBalance(accounts[0]);
     await hasNoEther.reclaimEther();
-    const ownerFinalBalance = await ethGetBalance(accounts[0]);
-    const finalBalance = await ethGetBalance(hasNoEther.address);
+    const ownerFinalBalance = await pweb3.eth.getBalance(accounts[0]);
+    const finalBalance = await pweb3.eth.getBalance(hasNoEther.address);
     assert.equal(finalBalance, 0);
     assert.isAbove(ownerFinalBalance, ownerStartBalance);
   });
@@ -55,7 +54,7 @@ contract('HasNoEther', function (accounts) {
     // Force ether into it
     const forceEther = await ForceEther.new({ value: amount });
     await forceEther.destroyAndSend(hasNoEther.address);
-    const forcedBalance = await ethGetBalance(hasNoEther.address);
+    const forcedBalance = await pweb3.eth.getBalance(hasNoEther.address);
     assert.equal(forcedBalance, amount);
 
     // Reclaim

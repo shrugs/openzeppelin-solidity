@@ -2,7 +2,6 @@ const { expectThrow } = require('../../helpers/expectThrow');
 const { EVMRevert } = require('../../helpers/EVMRevert');
 const { latestTime } = require('../../helpers/latestTime');
 const { increaseTimeTo, duration } = require('../../helpers/increaseTime');
-const { ethGetBlock } = require('../../helpers/web3');
 
 const BigNumber = web3.BigNumber;
 
@@ -44,7 +43,7 @@ contract('TokenVesting', function ([_, owner, beneficiary]) {
     await increaseTimeTo(this.start + this.cliff);
 
     const { receipt } = await this.vesting.release(this.token.address);
-    const block = await ethGetBlock(receipt.blockNumber);
+    const block = await pweb3.eth.getBlock(receipt.blockNumber);
     const releaseTime = block.timestamp;
 
     const balance = await this.token.balanceOf(beneficiary);

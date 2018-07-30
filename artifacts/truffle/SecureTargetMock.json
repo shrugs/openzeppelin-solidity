@@ -1,0 +1,21 @@
+{
+  "contractName": "SecureTargetMock",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "checkInvariant",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "6080604052348015600f57600080fd5b5060a58061001e6000396000f300608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063e79487da146044575b600080fd5b348015604f57600080fd5b5060566070565b604051808215151515815260200191505060405180910390f35b600060019050905600a165627a7a72305820dfedc110924394d3a316fd3794f2c4d2726dcc0e609dc80f5839158a13a920230029",
+  "linkReferences": {}
+}

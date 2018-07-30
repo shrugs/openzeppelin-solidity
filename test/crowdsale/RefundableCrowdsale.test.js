@@ -4,7 +4,6 @@ const { increaseTimeTo, duration } = require('../helpers/increaseTime');
 const { latestTime } = require('../helpers/latestTime');
 const { expectThrow } = require('../helpers/expectThrow');
 const { EVMRevert } = require('../helpers/EVMRevert');
-const { ethGetBalance } = require('../helpers/web3');
 
 const BigNumber = web3.BigNumber;
 
@@ -67,9 +66,9 @@ contract('RefundableCrowdsale', function ([_, owner, wallet, investor, purchaser
     await this.crowdsale.sendTransaction({ value: lessThanGoal, from: investor });
     await increaseTimeTo(this.afterClosingTime);
     await this.crowdsale.finalize({ from: owner });
-    const pre = await ethGetBalance(investor);
+    const pre = await pweb3.eth.getBalance(investor);
     await this.crowdsale.claimRefund({ from: investor, gasPrice: 0 });
-    const post = await ethGetBalance(investor);
+    const post = await pweb3.eth.getBalance(investor);
     post.minus(pre).should.be.bignumber.equal(lessThanGoal);
   });
 
@@ -77,9 +76,9 @@ contract('RefundableCrowdsale', function ([_, owner, wallet, investor, purchaser
     await increaseTimeTo(this.openingTime);
     await this.crowdsale.sendTransaction({ value: goal, from: investor });
     await increaseTimeTo(this.afterClosingTime);
-    const pre = await ethGetBalance(wallet);
+    const pre = await pweb3.eth.getBalance(wallet);
     await this.crowdsale.finalize({ from: owner });
-    const post = await ethGetBalance(wallet);
+    const post = await pweb3.eth.getBalance(wallet);
     post.minus(pre).should.be.bignumber.equal(goal);
   });
 });

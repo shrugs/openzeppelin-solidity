@@ -1,7 +1,6 @@
 const { expectThrow } = require('../helpers/expectThrow');
 const { EVMRevert } = require('../helpers/EVMRevert');
 const expectEvent = require('../helpers/expectEvent');
-const { ethGetBalance } = require('../helpers/web3');
 
 const BigNumber = web3.BigNumber;
 
@@ -62,9 +61,9 @@ contract('RefundEscrow', function ([owner, beneficiary, refundee1, refundee2]) {
     });
 
     it('allows beneficiary withdrawal', async function () {
-      const beneficiaryInitialBalance = await ethGetBalance(beneficiary);
+      const beneficiaryInitialBalance = await pweb3.eth.getBalance(beneficiary);
       await this.escrow.beneficiaryWithdraw();
-      const beneficiaryFinalBalance = await ethGetBalance(beneficiary);
+      const beneficiaryFinalBalance = await pweb3.eth.getBalance(beneficiary);
 
       beneficiaryFinalBalance.sub(beneficiaryInitialBalance).should.be.bignumber.equal(amount * refundees.length);
     });
@@ -91,9 +90,9 @@ contract('RefundEscrow', function ([owner, beneficiary, refundee1, refundee2]) {
 
     it('refunds refundees', async function () {
       for (const refundee of [refundee1, refundee2]) {
-        const refundeeInitialBalance = await ethGetBalance(refundee);
+        const refundeeInitialBalance = await pweb3.eth.getBalance(refundee);
         await this.escrow.withdraw(refundee);
-        const refundeeFinalBalance = await ethGetBalance(refundee);
+        const refundeeFinalBalance = await pweb3.eth.getBalance(refundee);
 
         refundeeFinalBalance.sub(refundeeInitialBalance).should.be.bignumber.equal(amount);
       }
