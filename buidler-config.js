@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const { createAutoNetwork } = require('buidler/src/core/web3/network');
+
 const HDWalletProvider = require('truffle-hdwallet-provider');
 
 const providerWithMnemonic = (mnemonic, rpcEndpoint) =>
@@ -16,6 +18,54 @@ const ropstenProvider = process.env.SOLIDITY_COVERAGE
 
 module.exports = {
   networks: {
+    test: {
+      provider () {
+        return createAutoNetwork(this);
+      },
+      blockGasLimit: 8000000,
+      accounts: [
+        {
+          privateKey: '0x2bdd21761a483f71054e14f5b827213567971c676928d9a1808cbfa4b7501200',
+          balance: '1000000000000000000000000',
+        },
+        {
+          privateKey: '0x2bdd21761a483f71054e14f5b827213567971c676928d9a1808cbfa4b7501201',
+          balance: '1000000000000000000000000',
+        },
+        {
+          privateKey: '0x2bdd21761a483f71054e14f5b827213567971c676928d9a1808cbfa4b7501202',
+          balance: '1000000000000000000000000',
+        },
+        {
+          privateKey: '0x2bdd21761a483f71054e14f5b827213567971c676928d9a1808cbfa4b7501203',
+          balance: '1000000000000000000000000',
+        },
+        {
+          privateKey: '0x2bdd21761a483f71054e14f5b827213567971c676928d9a1808cbfa4b7501204',
+          balance: '1000000000000000000000000',
+        },
+        {
+          privateKey: '0x2bdd21761a483f71054e14f5b827213567971c676928d9a1808cbfa4b7501205',
+          balance: '1000000000000000000000000',
+        },
+        {
+          privateKey: '0x2bdd21761a483f71054e14f5b827213567971c676928d9a1808cbfa4b7501206',
+          balance: '1000000000000000000000000',
+        },
+        {
+          privateKey: '0x2bdd21761a483f71054e14f5b827213567971c676928d9a1808cbfa4b7501207',
+          balance: '1000000000000000000000000',
+        },
+        {
+          privateKey: '0x2bdd21761a483f71054e14f5b827213567971c676928d9a1808cbfa4b7501208',
+          balance: '1000000000000000000000000',
+        },
+        {
+          privateKey: '0x2bdd21761a483f71054e14f5b827213567971c676928d9a1808cbfa4b7501209',
+          balance: '1000000000000000000000000',
+        },
+      ],
+    },
     development: {
       host: 'localhost',
       port: 8545,
