@@ -35,7 +35,6 @@ contract('Bounty', function ([_, owner, researcher]) {
         const event = await expectEvent.inLogs(result.logs, 'TargetCreated');
 
         this.targetAddress = event.args.createdAddress;
-
         await sendReward(owner, this.bounty.address, reward);
 
         const balance = await pweb3.eth.getBalance(this.bounty.address);

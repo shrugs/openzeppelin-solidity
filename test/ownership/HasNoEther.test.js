@@ -3,6 +3,10 @@ const { expectThrow } = require('../helpers/expectThrow');
 const HasNoEtherTest = artifacts.require('HasNoEtherTest');
 const ForceEther = artifacts.require('ForceEther');
 
+require('chai')
+  .use(require('chai-bignumber')(web3.BigNumber))
+  .should();
+
 contract('HasNoEther', function (accounts) {
   const amount = web3.toWei('1', 'ether');
 
@@ -30,21 +34,22 @@ contract('HasNoEther', function (accounts) {
     // Create contract
     const hasNoEther = await HasNoEtherTest.new();
     const startBalance = await pweb3.eth.getBalance(hasNoEther.address);
-    assert.equal(startBalance, 0);
+    startBalance.should.be.bignumber.eq(0);
 
     // Force ether into it
     const forceEther = await ForceEther.new({ value: amount });
     await forceEther.destroyAndSend(hasNoEther.address);
     const forcedBalance = await pweb3.eth.getBalance(hasNoEther.address);
-    assert.equal(forcedBalance, amount);
+    forcedBalance.should.be.bignumber.eq(amount);
 
     // Reclaim
     const ownerStartBalance = await pweb3.eth.getBalance(accounts[0]);
     await hasNoEther.reclaimEther();
     const ownerFinalBalance = await pweb3.eth.getBalance(accounts[0]);
     const finalBalance = await pweb3.eth.getBalance(hasNoEther.address);
-    assert.equal(finalBalance, 0);
-    assert.isAbove(ownerFinalBalance, ownerStartBalance);
+
+    finalBalance.should.be.bignumber.eq(0);
+    ownerFinalBalance.should.be.bignumber.gt(ownerStartBalance);
   });
 
   it('should allow only owner to reclaim ether', async function () {
@@ -55,7 +60,7 @@ contract('HasNoEther', function (accounts) {
     const forceEther = await ForceEther.new({ value: amount });
     await forceEther.destroyAndSend(hasNoEther.address);
     const forcedBalance = await pweb3.eth.getBalance(hasNoEther.address);
-    assert.equal(forcedBalance, amount);
+    forcedBalance.should.be.bignumber.eq(amount);
 
     // Reclaim
     await expectThrow(hasNoEther.reclaimEther({ from: accounts[1] }));

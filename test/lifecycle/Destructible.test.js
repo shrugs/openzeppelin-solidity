@@ -3,7 +3,7 @@ const DestructibleMock = artifacts.require('DestructibleMock');
 contract('Destructible', function (accounts) {
   beforeEach(async function () {
     this.destructible = await DestructibleMock.new({ from: accounts[0] });
-    await web3.eth.sendTransaction({
+    await pweb3.eth.sendTransaction({
       from: accounts[0],
       to: this.destructible.address,
       value: web3.toWei('10', 'ether'),

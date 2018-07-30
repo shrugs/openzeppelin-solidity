@@ -22,6 +22,7 @@ module.exports = {
       provider () {
         return createAutoNetwork(this);
       },
+      gas: 8000000,
       blockGasLimit: 8000000,
       accounts: [
         {
