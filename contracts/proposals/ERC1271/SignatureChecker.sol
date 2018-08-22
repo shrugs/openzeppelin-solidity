@@ -23,17 +23,12 @@ library SignatureChecker {
   function splitNextSignerAndSig(bytes memory _sig)
     internal
     pure
-    returns (address addr, bytes memory rest)
+    returns (address, bytes memory)
   {
-    // bytes array has 32 bytes of length param at the beginning
-    uint256 addrIndex = 32;
-    uint256 sigIndex = addrIndex + 20;
-
-    // solium-disable-next-line security/no-inline-assembly
-    assembly {
-      addr := mload(add(_sig, addrIndex))
-      rest := add(_sig, sigIndex)
-    }
+    return (
+      _sig.readAddress(0),
+      _sig.slice(20, _sig.length)
+    );
   }
 
   /**
@@ -54,10 +49,9 @@ library SignatureChecker {
       return ISignatureValidator(_signer).isValidSignature(_data, _signature);
     }
 
-
     // otherwise make sure the hash was personally signed by the EOA account
     // which means _sig should be highly compacted vrs
-    bytes32 signedHash = ECRecovery.toEthSignedMessageHash(_data.toBytes32(0));
+    bytes32 signedHash = ECRecovery.toEthSignedMessageHash(_data.readBytes32(0));
     return _signer == ECRecovery.recover(signedHash, _signature);
   }
 }

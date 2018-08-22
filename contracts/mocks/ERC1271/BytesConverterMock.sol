@@ -6,11 +6,11 @@ import "../../proposals/ERC1271/BytesConverter.sol";
 contract BytesConverterMock {
   using BytesConverter for bytes;
 
-  function toBytes32(bytes memory _arg, uint256 _index)
+  function readBytes32(bytes memory _arg, uint256 _index)
     public
     pure
     returns (bytes32)
   {
-    return _arg.toBytes32(_index);
+    return _arg.readBytes32(_index);
   }
 }

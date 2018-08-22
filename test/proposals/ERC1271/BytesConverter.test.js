@@ -15,16 +15,16 @@ contract.only('BytesConverter', function ([_, user]) {
   });
 
   it('should convert bytes to bytes32 at index 0', async function () {
-    (await this.mock.toBytes32(MOCK_BYTES, 0, { from: user })).should.equal(MOCK_BYTES32_1);
+    (await this.mock.readBytes32(MOCK_BYTES, 0, { from: user })).should.equal(MOCK_BYTES32_1);
   });
 
   it('should convert bytes to bytes32 at index > 0', async function () {
-    (await this.mock.toBytes32(MOCK_BYTES, 32, { from: user })).should.equal(MOCK_BYTES32_2);
+    (await this.mock.readBytes32(MOCK_BYTES, 32, { from: user })).should.equal(MOCK_BYTES32_2);
   });
 
   it('should throw when converting bytes to bytes32 without enough buffer room', async function () {
     await expectThrow(
-      this.mock.toBytes32(MOCK_BYTES, 32 + 1, { from: user })
+      this.mock.readBytes32(MOCK_BYTES, 32 + 1, { from: user })
     );
   });
 });

@@ -26,9 +26,9 @@ const constructSignatureforData = (data, signers = []) => {
       ])
   ).toString('hex');
 
-  console.log('data:', data);
-  console.log('signers:', signers);
-  console.log('final:', finalSignature);
+  // console.log('data:', data);
+  // console.log('signers:', signers);
+  // console.log('final:', finalSignature);
 
   return `0x${finalSignature}`;
 };
@@ -40,8 +40,9 @@ contract.only('SignatureChecker', function ([_, user, signer]) {
 
   describe('splitNextSignerAndSig', function () {
     it('should split signer and signature correctly', async function () {
-      const signature = constructSignatureforData(MOCK_DATA, signer);
-      const res = await this.checker.splitNextSignerAndSig(signature);
+      const signature = constructSignatureforData(MOCK_DATA, [signer]);
+      console.log(signature);
+      const res = await this.checker.splitNextSignerAndSig.sendTransaction(signature, { from: user });
       console.log(res);
     });
   });
