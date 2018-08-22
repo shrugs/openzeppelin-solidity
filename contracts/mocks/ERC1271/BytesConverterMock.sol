@@ -6,7 +6,7 @@ import "../../proposals/ERC1271/BytesConverter.sol";
 contract BytesConverterMock {
   using BytesConverter for bytes;
 
-  function toBytes32(bytes _arg, uint256 _index)
+  function toBytes32(bytes memory _arg, uint256 _index)
     public
     pure
     returns (bytes32)

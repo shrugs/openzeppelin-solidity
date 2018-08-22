@@ -33,6 +33,10 @@ const transformToFullName = function (json) {
   return json.name + '(' + typeName + ')';
 };
 
+const personalSignMessage = function (signer, message) {
+  return signMessage(signer, hashMessage(message));
+};
+
 /**
  * Create a signer between a contract and a signer for a voucher of method, args, and redeemer
  * Note that `method` is the web3 method, not the truffle-contract method
@@ -67,7 +71,6 @@ const getBouncerSigner = (contract, signer) => (redeemer, methodName, methodArgs
     }
   }
 
-  // ^ substr to remove `0x` because in solidity the address is a set of byes, not a string `0xabcd`
   const hashOfMessage = soliditySha3(...parts);
   return signMessage(signer, hashOfMessage);
 };
@@ -76,4 +79,6 @@ module.exports = {
   hashMessage,
   signMessage,
   getBouncerSigner,
+  personalSignMessage,
+  soliditySha3,
 };

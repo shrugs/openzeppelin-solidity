@@ -27,7 +27,7 @@ library SignatureChecker {
   {
     // bytes array has 32 bytes of length param at the beginning
     uint256 addrIndex = 32;
-    uint256 sigIndex = 32 + 20;
+    uint256 sigIndex = addrIndex + 20;
 
     // solium-disable-next-line security/no-inline-assembly
     assembly {
@@ -53,6 +53,7 @@ library SignatureChecker {
     if (_signer.supportsInterface(0x20c13b0b)) {
       return ISignatureValidator(_signer).isValidSignature(_data, _signature);
     }
+
 
     // otherwise make sure the hash was personally signed by the EOA account
     // which means _sig should be highly compacted vrs

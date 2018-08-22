@@ -17,13 +17,8 @@ contract SimpleIdentityMock is SignatureValidator {
     signers.add(_signer);
   }
 
-  /**
-   * @dev An action is valid iff the _sig of the _action is from an key with the ACTION purpose
-   * @param _action action that is signed
-   * @param _sig [[address] [address] [...]] <address> <v> <r> <s>
-   */
   function isValidSignature(
-    bytes _action,
+    bytes _data,
     bytes _sig
   )
     external
@@ -36,7 +31,7 @@ contract SimpleIdentityMock is SignatureValidator {
     bool hasPermission = signers.has(nextSigner);
 
     // validity
-    bool isValid = _action.isSignedBy(nextSigner, sig);
+    bool isValid = _data.isSignedBy(nextSigner, sig);
 
     return hasPermission && isValid;
   }
