@@ -1,7 +1,7 @@
 const { assertRevert } = require('../helpers/assertRevert');
 const { getBouncerSigner } = require('../helpers/sign');
 
-const Bouncer = artifacts.require('SignatureBouncerMock');
+const Bouncer = artifacts.require('BouncerMock');
 
 const BigNumber = web3.BigNumber;
 
@@ -13,54 +13,53 @@ const UINT_VALUE = 23;
 const BYTES_VALUE = web3.toHex('test');
 const INVALID_SIGNATURE = '0xabcd';
 
-contract('Bouncer', function ([_, owner, anyone, bouncerAddress, authorizedUser]) {
+contract('Bouncer', function ([_, owner, anyone, trustedSignerAddress, authorizedUser]) {
   beforeEach(async function () {
-    this.bouncer = await Bouncer.new({ from: owner });
-    this.roleBouncer = await this.bouncer.ROLE_BOUNCER();
+    this.bouncer = await Bouncer.new([owner], { from: owner });
   });
 
   context('management', function () {
-    it('has a default owner of self', async function () {
-      (await this.bouncer.owner()).should.equal(owner);
+    it('has a default signer of owner', async function () {
+      (await this.bouncer.isTrustedSigner(owner)).should.equal(true);
     });
 
     it('allows the owner to add a bouncer', async function () {
-      await this.bouncer.addBouncer(bouncerAddress, { from: owner });
-      (await this.bouncer.hasRole(bouncerAddress, this.roleBouncer)).should.equal(true);
+      await this.bouncer.addTrustedSigner(trustedSignerAddress, { from: owner });
+      (await this.bouncer.isTrustedSigner(trustedSignerAddress)).should.equal(true);
     });
 
     it('does not allow adding an invalid address', async function () {
       await assertRevert(
-        this.bouncer.addBouncer('0x0', { from: owner })
+        this.bouncer.addTrustedSigner('0x0', { from: owner })
       );
     });
 
     it('allows the owner to remove a bouncer', async function () {
-      await this.bouncer.addBouncer(bouncerAddress, { from: owner });
+      await this.bouncer.addTrustedSigner(trustedSignerAddress, { from: owner });
 
-      await this.bouncer.removeBouncer(bouncerAddress, { from: owner });
-      (await this.bouncer.hasRole(bouncerAddress, this.roleBouncer)).should.equal(false);
+      await this.bouncer.removeTrustedSigner(trustedSignerAddress, { from: owner });
+      (await this.bouncer.isTrustedSigner(trustedSignerAddress)).should.equal(false);
     });
 
     it('does not allow anyone to add a bouncer', async function () {
       await assertRevert(
-        this.bouncer.addBouncer(bouncerAddress, { from: anyone })
+        this.bouncer.addTrustedSigner(trustedSignerAddress, { from: anyone })
       );
     });
 
     it('does not allow anyone to remove a bouncer', async function () {
-      await this.bouncer.addBouncer(bouncerAddress, { from: owner });
+      await this.bouncer.addTrustedSigner(trustedSignerAddress, { from: owner });
 
       await assertRevert(
-        this.bouncer.removeBouncer(bouncerAddress, { from: anyone })
+        this.bouncer.removeTrustedSigner(trustedSignerAddress, { from: anyone })
       );
     });
   });
 
   context('with bouncer address', function () {
     beforeEach(async function () {
-      await this.bouncer.addBouncer(bouncerAddress, { from: owner });
-      this.signFor = getBouncerSigner(this.bouncer, bouncerAddress);
+      await this.bouncer.addTrustedSigner(trustedSignerAddress, { from: owner });
+      this.signFor = getBouncerSigner(this.bouncer, trustedSignerAddress);
     });
 
     describe('modifiers', function () {

@@ -39,24 +39,46 @@ library ECRecovery {
       v := byte(0, mload(add(_signature, 96)))
     }
 
+    return recoverVRS(_hash, v, r, s);
+  }
+
+  /**
+   * @dev recover using v, r, s
+   * @param _hash hash
+   * @param v v
+   * @param r r
+   * @param s s
+   */
+  function recoverVRS(
+    bytes32 _hash,
+    uint8 v,
+    bytes32 r,
+    bytes32 s
+  )
+    internal
+    pure
+    returns (address)
+  {
+    uint8 realVersion = v;
+
     // Version of signature should be 27 or 28, but 0 and 1 are also possible versions
-    if (v < 27) {
-      v += 27;
+    if (realVersion < 27) {
+      realVersion += 27;
     }
 
     // If the version is correct return the signer address
-    if (v != 27 && v != 28) {
+    if (realVersion != 27 && realVersion != 28) {
       return (address(0));
     } else {
       // solium-disable-next-line arg-overflow
-      return ecrecover(_hash, v, r, s);
+      return ecrecover(_hash, realVersion, r, s);
     }
   }
 
   /**
    * toEthSignedMessageHash
-   * @dev prefix a bytes32 value with "\x19Ethereum Signed Message:"
-   * and hash the result
+   * @dev prefix a bytes32 value with "\x19Ethereum Signed Message:\n32" and hash the result.
+   * @param _hash hash
    */
   function toEthSignedMessageHash(bytes32 _hash)
     internal

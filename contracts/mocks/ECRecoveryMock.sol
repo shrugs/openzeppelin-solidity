@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 
-import "../ECRecovery.sol";
+import "../signatures/ECRecovery.sol";
 
 
 contract ECRecoveryMock {

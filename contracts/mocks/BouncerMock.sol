@@ -1,57 +1,25 @@
 pragma solidity ^0.4.24;
 
-import "../access/SignatureBouncer.sol";
+import "../access/bouncer/BouncerWithTrustedSigners.sol";
 
 
-contract SignatureBouncerMock is SignatureBouncer {
-  function checkValidSignature(address _address, bytes _signature)
-    public
-    view
-    returns (bool)
-  {
-    return isValidSignature(_address, _signature);
-  }
-
-  function onlyWithValidSignature(bytes _signature)
-    public
-    onlyValidSignature(_signature)
-    view
-  {
-
-  }
-
-  function checkValidSignatureAndMethod(address _address, bytes _signature)
-    public
-    view
-    returns (bool)
-  {
-    return isValidSignatureAndMethod(_address, _signature);
-  }
-
-  function onlyWithValidSignatureAndMethod(bytes _signature)
-    public
-    onlyValidSignatureAndMethod(_signature)
-    view
-  {
-
-  }
-
-  function checkValidSignatureAndData(
+contract BouncerMock is BouncerWithTrustedSigners {
+  function checkValidTickets(
     address _address,
     bytes,
     uint,
-    bytes _signature
+    bytes _tickets
   )
     public
     view
     returns (bool)
   {
-    return isValidSignatureAndData(_address, _signature);
+    return validTickets(_tickets);
   }
 
-  function onlyWithValidSignatureAndData(uint, bytes _signature)
+  function onlyWithValidTickets(uint, bytes _tickets)
     public
-    onlyValidSignatureAndData(_signature)
+    onlyValidTickets(_tickets)
     view
   {
 

@@ -21,6 +21,14 @@ library Roles {
     _role.bearer[_account] = true;
   }
 
+  function addMany(Role storage _role, address[] _accounts)
+    internal
+  {
+    for (uint256 i = 0; i < _accounts.length; i++) {
+      add(_role, _accounts[i]);
+    }
+  }
+
   /**
    * @dev remove an account's access to this role
    */
